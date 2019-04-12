@@ -1,0 +1,381 @@
+【工作笔记】
+《发现问题、思考问题、优化代码》
+《程序猿的准则：思考1小时，码码10分钟》
+
+
+【Web页面优化】
+1.css放在header中，js放在body最下面
+2.图片懒加载（图片的延迟加载）
+ 所谓懒加载，就是当用户下拉到该页面时再加载图片，而不是当用户打开页面就将所有图 片全部加载完毕。
+2A.图片预加载
+  使用纯的css进行图片预加载
+  使用纯javascript进行图片预加载
+3.减少DOM操作，对DOM查询做缓存
+4.合并DOM操作
+5.时间节流
+ 参考输入搜索，这个代码实现的功能是：当连续很快输入时，不需要每次抬起按键都执行   函 数，只有当按键抬起超过100ms才执行操作，可以减少事件操作，因为在连续操作时     会执  行很多计算，严重影响性能。
+6.用DOMContentLoaded替代window.onload
+  window.onload:在页面加载完毕才会执行操作。
+  DOMContentLoaded：在页面渲染完执行操作，此时图片、视频等可能还未被加载完。
+7.函数节流与函数防抖
+  节流throttle:等时间间隔执行函数， 让一个函数不要执行得太频繁，减少一些过快的调用来节流。
+  应用场景:
+  DOM 元素的拖拽功能实现（mousemove）
+射击游戏的 mousedown/keydown 事件（单位时间只能发射一颗子弹）
+计算鼠  标移动的距离（mousemove）
+Canvas 模拟画板功能（mousemove）
+搜索联想（keyup）
+监听滚动事件判断是否到页面底  部自动加载更多：给 scroll 加了 debounce 后，只有用户停止滚动后，才会判断是否到了页面底部；如果是   throttle 的话，只要页面滚动就会间隔一段时间判断一次
+
+作者：韩子迟
+链接：  https://www.jianshu.com/p/151d2f055a00
+来源：简书
+简书著作权归作者所有，任何形式的转载都请联系作者获得授权并注明出处。
+  防抖debounce:函数去抖就是对于一定时间段的连续的函数调用，只让其执行一次。
+  应用场景：1.每次 resize/scroll 触发统计事件。2.文本输入的验证（连续输入文字后发送 AJAX 请求进行验证，验证一次就好）
+【小程序】
+ *代码构成
+   .json JSON静态配置文件
+     *app.json 
+   .wxml WXML模板文件
+   .wxss WXSS样式文件
+   .js JS脚本逻辑文件
+*与HTML的区别
+  1.标签名字不一样
+  2.多了一些 wx:if这样属性以及{{}}这样的表达式
+*运行环境
+  1.渲染层 WXML WXSS工作
+  2.逻辑层 JS脚本工作
+*程序与页面
+  1.微信客户端打开小程序之前，会被整个小程序的代码下载到本地
+  2.紧接着通过app.json的pages字段知道你当前小程序的所有页面路径
+*组件
+  组合各种组件拼接合成自己的小程序
+  自定义组件(也是可以引用自定义组件的)
+    包含 js properties: {
+    		buttonText:{
+      		  type: "String",
+      		  value: "默认按钮"
+    		}
+  	 },
+         json {"component":true}
+	 wxml 
+         wxss
+    引用组件的父组件
+    json {"usingComponents":{"组件名称":"组件地址"}}
+    
+*page.js
+this.setDate({key:value}); //设置改变数据值
+Page(
+{
+  data:{}, //数据
+  fun(){}, //方法时间
+ }
+)
+
+【WebRTC】
+ *带宽自适应算法
+  1. 发端带宽控制，　原理是由 RTCP 中的丢包统计来动态的增加或减少带宽，在减少带    宽时使用TFRC 算法来增加平滑度。
+  2. 收端带宽估算，　原理是并由收到 RTP 数据，估出带宽；　用卡尔曼滤波，对每一帧  的发送时间和接收时间进行分析，　从而得出网络带宽利用情况，修正估出的带宽。
+
+【gulp】
+1.压缩图片插件：gulp-imagemin,gulp-smushit;
+2.压缩js插件：gulp-uglify
+3.压缩css插件：gulp-minifycss
+
+【CSS部分】
+ 1.input[type=range]的样式
+/*横条样式*/
+input[type=range] {
+  -webkit-appearance: none;/*清除系统默认样式*/
+  width: 100%;
+  background:#eee;右边颜色为#ddd*/
+  background-size: 100% 100%;/*设置左右宽度比例*/
+  height: 4px;/*横条的高度*/
+}
+/*拖动块的样式*/
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;/*清除系统默认样式*/
+  height: 26px;/*拖动块高度*/
+  width: 26px;/*拖动块宽度*/
+  background: #0099EE;/*拖动块背景*/
+  border-radius: 50%; /*外观设置为圆形*/
+}
+// css !important用法
+选择器{
+  属性:值 !important;
+}
+2.解决移动端滑动不流畅问题
+ body {
+    -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch;
+  }
+
+3.解决表格中表头与与表体单元格对不齐问题
+  *th td用浮动解决
+  不要用display:inline-block;
+5.阴影边框
+  box-shodow:(inset) 2px 2px 4px 4px rgba(0,0,0,0.4);
+	    (inset)  X offset Y offset Blur Spread Clor
+6.消除IOS移动端点击事件页面闪动问题
+*{
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+}
+
+【js部分】
+1.正则中文替换其文字
+  str.replace(/[u4e00-u9fa5]/,'')
+2.ES6箭头函数省略问题
+  (a,b)=>{
+    return a+b;
+   }
+   (a,b)=> a+b; // 当只有一行表达式时，可以省略return和{}；
+3.日期转化为时间戳
++new Date();
+4.谷歌浏览器最小字体大小为12px
+  小于12px按照12px计算
+5.三目运算简写
+this.isSelectAllDept=isSelectAllDept===false? : true :fasle;
+this.isSelectAllDept=isSelectAllDept!==true;
+6.文件转换为blob文件
+  let src=window.URL.createObjectURL(file);
+7.对象解构
+  对象放在最前面 后面的只才能覆盖前面的属性值
+  let obj={prop1:"111"}
+  {...obj,prop1:'222'}
+8.通过解构可以方便的交换两个变量的值
+  var a=1; var b=3;
+  [a,b]=[b,a];
+  console.log(b,a); //2,1
+9.获取浏览器滚动高度
+  document.documentElement.scrollTop;
+  获取元素到页面顶部的距离
+  ele.offsetTop
+  获取窗口的高度
+  window.innerHeight
+
+【MpVue】
+mpvue 作为小程序版本的 Vue.js，在框架 SDK 之外，完整的技术体系还包括如下设施。
+  mpvue-loader 提供 webpack 版本的加载器
+  mpvue-webpack-target webpack 构建目标
+  postcss-mpvue-wxss 样式代码转换预处理工具
+  px2rpx-loader 样式转化插件
+  mpvue-lint 开发辅助插件，包括语法检查，内存检查等功能
+
+  
+【Vue】
+1.npm run build打包后页面出现空白
+  解决办法：修assetPublicPath:/改为：./
+2.v-html样式无效
+  去掉style里面的scoped属性就行
+3.watch:监听一组数组对象的某个属性值变化时用深拷贝
+  items:{
+    handler:()=>{},
+    deep:true
+  }
+4.如果要页面中重新渲染Dom使用v-if 只是隐藏或显示v-show
+5.vue-cli@3.0引入px2rem插件
+ *安装：yarn add lib-flexible
+ *引入：入口文件main.js中：import 'lib-flexible/flexible.js'
+ *安装：yarn add postcss-pxtorem
+ *配置：package.json内，在postcss内添加：
+ "postcss": {
+    "plugins": {
+      "autoprefixer": {},
+      "postcss-pxtorem": {
+        "rootValue": 75,
+        "propList": [
+          "*"
+        ]
+      }
+    }
+  },
+6.路由切换时可使用transition来增加过渡效果
+7.上传文件时显示文件上传进度用：
+  onUploadProgress:function(progressEvent){
+    if(progressEvent.lengthComputable){
+      cb(progressEvent); //回调方法
+    }
+  },
+8.Vue代码规范
+ *组件名要多个单词 防止与html标签重名
+ *data属性的值除了new Vue()之外必须返回一个函数
+ *props的值要指定具体的类型
+ *在组件上总是必须用 key 配合 v-for，以便维护内部组件及其子树的状态
+ *永远不要把 v-if 和 v-for 同时用在同一个元素上。
+ *元素特性的顺序
+  *is
+   v-for
+   v-if v-else-if v-else v-show v-cloak
+   v-pre v-once
+   id
+   ref key slot
+   v-model
+   v-on
+   v-html v-text
+9.vue-cli3.0创建新的项目
+  vue create project-name
+10.vue-cli@3.0打包项目后页面出现空白
+  解决办法：在项目根目录添加vue.config.js配置文件
+	module.exports={
+  	  baseUrl:'./'
+	}
+11.RangeError: Invalid string length
+  原因：vue中v-for 数组的长度小于0导致
+12.el-input绑定enter回车事件
+  @keyup.enter.native=fun();
+13.eslint提示控制台打印错误
+  解决：1.创建.eslintrc.js 文件
+        2.内容
+	module.exports={
+  	  rules: {
+    	  'no-console': 'off',
+  	  }
+	};
+14.注册的总线事件要在组件销毁时卸载，否则会多次挂载，造成触发一次但多个响应的情况
+beforeDestroy () {
+  this.bus.$off('updateData', this.getData);
+}
+15.组件的抽取
+  避免高耦合，子组件的事件，逻辑放在父组件中，子组件只是一个承载体
+  // 子组件 proflist
+  changeSort( sortObj ) {
+    this.$emit('sortChange', sortObj )
+  }
+  // 父组件
+  <proflist @hanldSortChange='sortChange'></proflist>
+  Slot的应用
+  统一管理的样式Less
+16.子组件不能修改父组件通过props传递给子组件的数据
+  解决办法：
+  1.子组件通过$emit修改父组件的数据
+  2.子组件先保存变量后再使用
+17.避免很多组件一个个引用的问题
+  解决办法：
+  1.// 在文件开头初始引入所有的组件文件
+    
+import b from "./components/common/b.vue"
+import c from "./components/common/c.vue"
+ 
+const components = [b,c];
+ 
+const install = function (Vue, opts = {}) {
+	components.map(component => {
+		Vue.component(component.name, component);
+	});
+};
+ 
+
+  2.然后直接在启动的main.js文件里面引入就好
+  import ui from "install.js"
+  Vue.use(ui);
+  3.直接使用了
+
+
+
+【React】
+1.修改npm模块源
+  npm config set registry https://registry.npm.taobao.org
+2.JSX语法渲染到页面经历的过程
+  JSX(Babel编译 React.js构造)->javaScript对象结构(ReactDOM.render)->DOM元素->插入页面
+3.组件的编写
+  理解需求 分析需求 划分需求
+  自顶而下，逐步求精
+4.组件之间共享的状态
+  交给最近的公共节点保存（状态提升）
+5.组件之间的生命周期
+  constructor state的初始化工作
+  componetWillMount ajax的数据拉取 定时器的启动
+  componentDidMount
+  componentWillUnmount 组件销毁
+  shouldComponentUpdate(nextProps,nextState);
+6.dangerouslySetInnerHTML
+  style={样式对象}
+7.PropTypes验证
+8.代码小贴士
+  组件的私有方法都用 _ 开头，所有事件监听的方法都用 handle 开头。
+  把事件监听方法传给组件的时候，属性名用 on 开头。
+
+  static 开头的类属性，如 defaultProps、propTypes。
+  构造函数，constructor。
+  getter/setter（还不了解的同学可以暂时忽略）。
+  组件生命周期。
+  _ 开头的私有方法。
+  事件监听方法，handle*。
+  render*开头的方法，有时候 render() 方法里面的内容会分开到不同函数里面进行，这些函数都以 render* 开头。
+  render() 方法。
+  数据本地持久化
+  所有的 Dumb 组件都放在 components/ 目录下，所有的 Smart 的组件都放在 containers/
+9.高阶组件
+  高阶组件就是一个函数，传给它一个组件，它返回一个新组件（高阶组件不是一个组件）
+  作用：其实就是为了组件之间的代码复用。组件可能有着某些相同的逻辑，把这些逻辑抽离出来，放到高阶组件中进行复用。高阶组件内部的包装组件和被包装组件之间通过 props 传递数据。
+  类似于装饰者模式：在不改变原对象的基础上，通过对其进行包装拓展（添加属性或者方法）使原有对象可以满足用户更复杂的需求
+
+10.React的context
+  定义：某个组件只要往自己的context里面放了某些状态，这个组件之下的所有子组件都直接访问这个状态而不需要通过中间组件传递。一个组件的context只有它的所有子组件能够访问，它的父组件是不能访问的，你可以理解每个组件的context就是瀑布的源头，只能下流不能往上飞。
+  用法：*父组件
+         static childContextTypes={
+           变量：PropTypes.类型
+         }
+
+         getChildContext(){
+           return {变量：变量值}  //子树的context
+         }
+        *子组件
+         static contextTypes={
+           变量：PropTypes.类型
+         }
+         // 获取变量
+         this.context.变量
+  缺点：
+    context 打破了组件和组件之间通过 props 传递数据的规范，极大地增强了组件之间的耦合性。而且，就如全局变量一样，context 里面的数据能被随意接触就能被随意修改，每个组件都能够改 context 里面的内容会导致程序的运行不可预料。
+  解决：使用第三方库
+
+11.Make-Redux
+  1.纯函数：一个函数返回的结果只依赖于它的参数 并且在执行过程中没有副作用
+    为什么使用纯函数：“靠谱” 执行纯函数不会产生不可预料的行为，不会对外部产生影响 程序测试调试方便
+  2.
+  *对象之间共享结构对象（浅复制对象，覆盖，拓展对象）
+   var user1={name:"tom",gender:"male"};
+   var user2={name:"petter",gender:"male"};
+   function changePerson(newPerson,oldPerson){
+     if(newPerson===oldPerson) return;
+     console.log("person change");
+     changeName(newPerson.name,oldPerson.name);
+     chanGender(newPerson.gender,oldPerson.gender);
+   }
+   function changeName(newName,oldname){
+      if(newName===oldname) return;
+      console.log("name change");
+   }
+   function chanGender(newGender,oldGender){
+      if(newGender===oldGender) return;
+      console.log("gender change");
+   }
+
+   var oldUser=user1;
+   var newUser={...oldUser,name:"jhon"};
+   changePerson(newUser,oldUser)
+   // person change
+   // name change
+12.Dumb 基本只做一件事情 —— 根据 props 进行渲染。而 Smart 则是负责应用的逻辑、数据，把所有相关的 Dumb（Smart）组件组合起来，通过 props 控制它们。
+   Smart 组件可以使用 Smart、Dumb 组件；而 Dumb 组件最好只使用 Dumb 组件，否则它的复用性就会丧失。
+13.使用react-redux
+  定义 action types
+  编写 reducer
+ 跟这个 reducer 相关的 action creators
+  
+【Node】
+ 由于众所周知的原因，可以考虑切换源为 taobao 源
+ $ npm set registry https://registry.npm.taobao.org/
+
+
+
+
+
+
+
+
+
+  
+	
